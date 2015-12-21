@@ -2,10 +2,10 @@
 <module configVersion="1.0">
 	
 	<!-- Base Module Properties -->
-	<id>camerwa</id>
-	<name>Camerwa drug report</name>
-	<version>1.4.2</version>
-	<package>org.openmrs.module.@MODULE_ID@</package>
+	<id>@MODULE_ID@</id>
+	<name>@MODULE_NAME@</name>
+	<version>@MODULE_VERSION@</version>
+	<package>@MODULE_PACKAGE@</package>
 	<author>Regis Rwirangira</author>
 	<description>
 			This module will control the openmrs Camerwa drug report
@@ -158,8 +158,7 @@
 	</messages>
 	<!-- /Internationalization -->
 	 <mappingFiles>
-     RegimenComposition.hbm.xml
-     RegimenCategory.hbm.xml
+     ${omodHbmConfig}
     </mappingFiles>
     <privilege>
          <name>Manage Regimens</name>
