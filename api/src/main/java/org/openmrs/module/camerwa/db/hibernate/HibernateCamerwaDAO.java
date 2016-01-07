@@ -25,14 +25,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.camerwa.CamerwaGlobalProperties;
 import org.openmrs.module.camerwa.RegimenComposition;
 import org.openmrs.module.camerwa.db.CamerwaDAO;
@@ -42,7 +43,7 @@ import org.openmrs.module.camerwa.regimenhistory.RegimenUtils;
 
 public class HibernateCamerwaDAO implements CamerwaDAO {
 	
-	private SessionFactory sessionFactory;
+	private DbSessionFactory sessionFactory;
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
@@ -55,7 +56,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	public HashMap<String, Object> getPatientsUnderDrug(Date dateFormatedNew, Date dateFormatedLimite) throws ParseException {
 		
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		
 		HashMap<String, Object> returnCollection = new HashMap<String, Object>();
 		List<Integer> patientsOnRegimens= new ArrayList<Integer>();
@@ -680,7 +681,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	 * 
 	 * @param sessionFactory
 	 */
-	public void setSessionFactory(SessionFactory sessionFactory) {
+	public void setSessionFactory(DbSessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
@@ -689,7 +690,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	 * 
 	 * @return
 	 */
-	public SessionFactory getSessionFactory() {
+	public DbSessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 	
@@ -726,7 +727,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getAllKidsDOBQuery(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery allKidsDOBQuery = session
@@ -743,7 +744,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getkidsDOBQueryNew(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery kidsDOBQueryNew = session
@@ -761,7 +762,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getAllAdultDOBQuery(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery allAdultDOBQuery = session
@@ -780,7 +781,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	public List<Integer> getAdultDOBQueryNew(Date dateFormatedNew, Date dateFormatedLimite) {
 			
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery adultDOBQueryNew = session
@@ -800,7 +801,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getAllPatientsUnderARV(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery allPatientsUnderARV = session
@@ -817,7 +818,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPatientsUnderArv(Date dateFormatedNew, Date dateFormatedLimite) {
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery patientsUnderARVNew = session
@@ -835,7 +836,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPatientsExitedFromCare(Date dateFormatedLimite) {
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp =new CamerwaGlobalProperties();
 		int exitedFromCareConceptId =gp.getConceptIdAsInt("camerwa.ExitedFromCareConceptId");
 		
@@ -859,7 +860,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 		}
 		return patientsExitedFromCare;
 		
-		/*Session session = sessionFactory.getCurrentSession();
+		/*DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp =new CamerwaGlobalProperties();
 		int exitedFromCareConceptId =gp.getConceptIdAsInt("camerwa.ExitedFromCareConceptId");
 		SQLQuery allPatientsExitedFromCare = session
@@ -871,7 +872,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getPatientsVoided() {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery patientsVoided = session.createSQLQuery("select distinct patient_id from patient pe where pe.voided=1");
 		
 		return patientsVoided.list();
@@ -879,7 +880,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getPatientsExitedFromCareDefinedLast(int concept, Date dateFormatedNew) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp =new CamerwaGlobalProperties();
 		int exitedFromCareConceptId =gp.getConceptIdAsInt("camerwa.ExitedFromCareConceptId");
 		SQLQuery patientsExitedFromCareLast = session
@@ -891,7 +892,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPatientsExitedFromCareDefinedNew(int concept, Date dateFormatedNew, Date dateFormatedLimite) {
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp =new CamerwaGlobalProperties();
 		int exitedFromCareConceptId =gp.getConceptIdAsInt("camerwa.ExitedFromCareConceptId");
 		SQLQuery patientsExitedFromCareNew = session
@@ -907,7 +908,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getKidsUnderArvComprimeNew(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery kidsUnderArvComprimeNew = session
@@ -926,7 +927,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getAllKidsUnderArvComprime(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery AllKidsUnderArvComprime = session
@@ -943,7 +944,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getKidsUnderArvSiropsNew(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery kidsUnderArvSiropsNew = session
@@ -962,7 +963,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getAllKidsUnderArvSiropsLast(Date dateFormatedNew, Date dateFormatedLimite) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery allKidsUnderArvSiropsLast = session
@@ -1033,7 +1034,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 		
 		
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 	//	log.info("drugConceptId1drugConceptId1drugConceptId this is new  "+getDateFormatedFromDateObject(dateFormatedNew)+"1drugConceptId  "+getDateFormatedFromDateObject(dateFormatedLimite)+"1drugConceptId1drugConceptId1 new "+drugConceptId1);
 		SQLQuery patientsUnderRegimenAdultNewOneDrug = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
@@ -1053,7 +1054,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 		
 	}public List<Integer> getRegimenAdultNewForOneDrugEfv600(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery patientsUnderRegimenAdultNewOneDrug = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1137,7 +1138,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	}
 	
 	public List<Integer> getRegimenAdultLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		
 		//log.info("drugConceptId1drugConceptId1drugConceptId1drugConceptId1drugConceptId1drugConceptId1 last"+drugConceptId1);
 		SQLQuery allPatientUnderRegimenAdultOnDrug = session
@@ -1154,7 +1155,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 		return allPatientUnderRegimenAdultOnDrug.list();
 	}
 	public List<Integer> getRegimenAdultLastOneDrugEvr600(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery allPatientUnderRegimenAdultOnDrug = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1218,7 +1219,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPediatricUnderRegimenLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                         Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery pediatricUnderRegimenLastOneDrug = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1272,7 +1273,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPediatricUnderRegimenNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                        Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery pediatricUnderRegimenNewOneDrug = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1377,7 +1378,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPediatricUnderPediatricSiropNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                               Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1442,7 +1443,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 	
 	public List<Integer> getPediatricUnderPediatricSiropLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                                Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1503,7 +1504,7 @@ public class HibernateCamerwaDAO implements CamerwaDAO {
 
 public List<Integer> getPediatricUnderRegimenAdultThirdLineNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
                 Object drugConceptId1) {
-Session session = sessionFactory.getCurrentSession();
+DbSession session = sessionFactory.getCurrentSession();
 SQLQuery kidsDOBQueryNew = session
 .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
     + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1568,7 +1569,7 @@ return kidsDOBQueryNew.list();
 
 public List<Integer> getPediatricUnderRegimenAdultThirdLineLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
                  Object drugConceptId1) {
-Session session = sessionFactory.getCurrentSession();
+DbSession session = sessionFactory.getCurrentSession();
 SQLQuery kidsDOBQueryNew = session
 .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
     + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1624,7 +1625,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Integer> getPediatricUnderSecondLineNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                           Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1642,7 +1643,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Integer> getAdultUnderSecondLineNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                       Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1786,7 +1787,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Integer> getPatientsUnderProphylaxieNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                           Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1849,7 +1850,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Integer> getPatientsUnderProphylaxieLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                            Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1904,7 +1905,7 @@ return kidsDOBQueryNew.list();
 	}
 	
 	public List<Integer> getPatientsUnderPmtcNewOneDrug(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1922,7 +1923,7 @@ return kidsDOBQueryNew.list();
 		return kidsDOBQueryNew.list();
 	}
 	public List<Integer> getPatientsUnderPmtcNewOneDrugSirop(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -1992,7 +1993,7 @@ return kidsDOBQueryNew.list();
 	}
 	
 	public List<Integer> getPatientsUnderPmtcLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -2009,7 +2010,7 @@ return kidsDOBQueryNew.list();
 		return kidsDOBQueryNew.list();
 	}
 	public List<Integer> getPatientsUnderPmtcLastOneDrugSirop(Date dateFormatedNew, Date dateFormatedLimite, Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -2030,7 +2031,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Integer> getPediatricUnderSecondLineLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                            Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -2047,7 +2048,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Integer> getAdultUnderSecondLineLastOneDrug(Date dateFormatedNew, Date dateFormatedLimite,
 	                                                        Object drugConceptId1) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery kidsDOBQueryNew = session
 		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -2103,7 +2104,7 @@ return kidsDOBQueryNew.list();
 	public List<Date> getStartDateByPatientAndDrug(Integer patientId, Object conceptId) {
 		//log.info(" feeeeeeeeeeeeeeeeeeeeeee  eeee "+conceptId+" gggggggggggggggggggg    gf  dreeeeee "+patientId);
 		Integer conceptInteger = (Integer) conceptId;
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery startDates = session
 		        .createSQLQuery("select distinct o.start_date from patient p inner join orders o on o.patient_id=p.patient_id"
 		               // + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -2117,7 +2118,7 @@ return kidsDOBQueryNew.list();
 	
 	/*public boolean checkIfStartDatesAreLast(Integer patientId, Object ConceptId, Date dateFormatedNew) {
 		
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery startDate = session
 		        .createSQLQuery("select distinct o.start_date from patient p inner join orders o on o.patient_id=p.patient_id"
 		                + " inner join drug_order dor on dor.order_id=o.order_id"
@@ -2259,7 +2260,7 @@ return kidsDOBQueryNew.list();
 		
 		List<Integer> patientsNotLostFollowUp = new ArrayList<Integer>();
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		
 		Date threeMonthsBeforeEndDate = getTreeMonthBefore(df.format(startDate));
 		
@@ -2348,14 +2349,14 @@ return kidsDOBQueryNew.list();
 	
 	public List<String> getLocations() {
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		SQLQuery query = session.createSQLQuery("SELECT name FROM location ;");
 		
 		return query.list();
 	}
 	
 	public List<Date> getLastVisiteDate(Patient patient) {
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		SQLQuery queryDate2 = session.createSQLQuery("select cast(max(value_datetime) as DATE ) "
 		        + "from obs where concept_id = 5096 and person_id = " + patient.getPatientId());
 		
@@ -2365,7 +2366,7 @@ return kidsDOBQueryNew.list();
 	
 	public List<Date> getLastEncouterDate(Patient patient) {
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		SQLQuery queryDate1 = session
 		        .createSQLQuery("select cast(max(encounter_datetime)as DATE) from encounter where patient_id = "
 		                + patient.getPatientId());
@@ -2448,7 +2449,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
  }
    
    public List<Integer> getDrugIdByConceptId(Integer conceptId) {
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		SQLQuery drugIdByConceptId = session
 		        .createSQLQuery("SELECT drug_id FROM drug d where concept_id = "+conceptId);
 		return drugIdByConceptId.list();
@@ -2482,7 +2483,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
     	 
     	 List<List<Object>> adultRegimenCompositions = new ArrayList<List<Object>>(); 
     	 
-    	Session session = sessionFactory.getCurrentSession();
+    	DbSession session = sessionFactory.getCurrentSession();
     	
   		SQLQuery regimenComposition0 = session
   		        .createSQLQuery("select regimen_name from regimencomposition where regimen_category = '"+regimenCategory+"'");
@@ -2521,7 +2522,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
  		
  	} 
      public List<Integer> getRegimenCompositionByName(String regimenName) {
- 		Session session = sessionFactory.getCurrentSession();
+ 		DbSession session = sessionFactory.getCurrentSession();
  		SQLQuery regimenCompostion1 = session
  		        .createSQLQuery("select drug_concept_id1 from regimencomposition where regimen_name='"+regimenName+"'");
  		SQLQuery regimenCompostion2 = session
@@ -2543,7 +2544,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
  	}
      public List<Integer> getOldPatientPerDate(Date dateFormatedNew) {
     	 	 
-    	 Session session = sessionFactory.getCurrentSession();
+    	 DbSession session = sessionFactory.getCurrentSession();
   		 SQLQuery patientsList = session
   		        .createSQLQuery("select distinct p.patient_id from patient p inner join orders o on o.patient_id=p.patient_id"
 		                 +" inner join drug_order dor on dor.order_id=o.order_id"
@@ -2555,14 +2556,14 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
   
    public List<String> getRegimenCategories() {
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		SQLQuery query = session.createSQLQuery("select regimen_category_name from regimencategory;");
 		
 		return query.list();
 	}
    public List<String> getRegimenNames() {
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		SQLQuery query = session.createSQLQuery("select regimen_name from regimencomposition;");
 		
 		return query.list();
@@ -2572,7 +2573,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
 	   Boolean queryHasExecuted=true;
 	   try {
 		   
-		   Session session = getSessionFactory().getCurrentSession();
+		   DbSession session = getSessionFactory().getCurrentSession();
 		   SQLQuery query = session.createSQLQuery("delete from regimencomposition where regimen_name='"+regimenName+"' and regimen_category='"+regimenCategory+"';");
 		   query.executeUpdate();		
     }
@@ -2584,7 +2585,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
   
    public List<String> getArvDrugs() {
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
 		String arvConceptIds = gp.getArvConceptIdList();
 		SQLQuery query = session.createSQLQuery("select name from drug where concept_id in("+arvConceptIds+");");
@@ -2593,7 +2594,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
 	}
    public Integer getConceptIdByDrugName(String DrugName) {
 		
-		Session session = getSessionFactory().getCurrentSession();
+		DbSession session = getSessionFactory().getCurrentSession();
 		SQLQuery query = session.createSQLQuery("select concept_id from drug where name='"+DrugName+"';");
 			
 		if(query.list().size()>0){
@@ -2607,7 +2608,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
 	   try {
 		   
 		   
-		    Session session = getSessionFactory().getCurrentSession();
+		    DbSession session = getSessionFactory().getCurrentSession();
 		  	RegimenComposition regimenComposition = new RegimenComposition();
 		  	if(drug_concept_id1!=null){
 		  	regimenComposition.setDrugConceptId1((Integer) drug_concept_id1);
@@ -2636,7 +2637,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
 		return queryHasExecuted;
 	}
    public Date getTreeMonthBefore(String date){
-	   Session session = getSessionFactory().getCurrentSession();
+	   DbSession session = getSessionFactory().getCurrentSession();
 	   SQLQuery query = session.createSQLQuery("SELECT DATE_SUB(CAST('"+date+"' AS DATE), INTERVAL 3 MONTH);");
 	   
 	   
@@ -2646,7 +2647,7 @@ public List<Integer> getPatientOnOnlyGivenDrugs(List<Integer> listDrugIds, List<
    public Date getWhenPatientStarted(Patient patient) {
 		SQLQuery query = null;
 		CamerwaGlobalProperties gp = new CamerwaGlobalProperties();
-		Session session = sessionFactory.getCurrentSession();
+		DbSession session = sessionFactory.getCurrentSession();
 		
 		StringBuffer strbuf = new StringBuffer();
 		
