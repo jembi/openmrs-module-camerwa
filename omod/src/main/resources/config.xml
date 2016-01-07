@@ -158,8 +158,9 @@
 	</messages>
 	<!-- /Internationalization -->
 	 <mappingFiles>
-     ${omodHbmConfig}
-    </mappingFiles>
+	 		RegimenCategory.hbm.xml
+			RegimenComposition.hbm.xml
+     </mappingFiles>
     <privilege>
          <name>Manage Regimens</name>
          <description>Able to create and delete regiemens</description>
